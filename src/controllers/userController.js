@@ -65,16 +65,30 @@ export const getUsers = async (req, res) => {
 // Atualizar usuário
 export const updateUser = async (req, res) => {
   try {
-    const updatedUser = await prisma.User.update({
-      where: { id: req.params.id },
+    const { id } = req.params;
+    const { email, nome, cel, senha } = req.body;
+
+    // Verifica se a senha foi fornecida para atualização
+    let senhaCriptografada;
+    if (senha) {
+      senhaCriptografada = await bcrypt.hash(senha, 10); // Criptografa a nova senha
+    }
+
+    // Atualiza o usuário no banco de dados
+    const updatedUser = await prisma.user.update({
+      where: { id },
       data: {
-        email: req.body.email,
-        nome: req.body.nome,
-        cel: req.body.cel,
-        senha: req.body.senha,
+        email,
+        nome,
+        cel,
+        senha: senhaCriptografada, // Atualiza a senha criptografada (se fornecida)
       },
     });
-    res.status(200).json(updatedUser);
+
+    // Remove a senha da resposta
+    const userSemSenha = { ...updatedUser, senha: undefined };
+
+    res.status(200).json(userSemSenha); // Retorna o usuário atualizado sem a senha
   } catch (error) {
     console.error('Erro ao atualizar usuário:', error);
     res.status(500).json({ error: 'Erro ao atualizar usuário', details: error.message });
