@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 // Criar usuário
 export const createUser = async (req, res) => {
   try {
-    const { email, nome, cel, senha } = req.body;
+    const { email, nome, cel, senha, perfil } = req.body;
+
+    if (perfil && perfil !== 'admin' && perfil !== 'user') {
+      return res.status(400).json({ error: 'Perfil inválido. Use "admin" ou "user".' });
+    }
 
     // Criptografa a senha
     const senhaCriptografada = await bcrypt.hash(senha, 10); // 10 é o número de rounds de criptografia
@@ -18,6 +22,7 @@ export const createUser = async (req, res) => {
         nome,
         cel,
         senha: senhaCriptografada, // Salva a senha criptografada
+        perfil: perfil || 'user', // Define o perfil (padrão: 'user')
       },
     });
 
