@@ -1,0 +1,25 @@
+app.js roda na porta 3000
+studio prisma roda na porta 5555
+
+
+1° Rodar o prisma:     
+                       npx prisma generate --schema=src/prisma/schema.prisma
+
+2° Rodar app.js:       node C:\Users\marco\Desktop\ecommerce\src\app.js 
+                       node --watch C:\Users\marco\Desktop\ecommerce\src\app.js
+
+
+
+DATABASE_URL="mongodb+srv://marcossousa:ecommerce@cluster0.v0w2s.mongodb.net/users"
+mongodb+srv://<credentials>@cluster0.v0w2s.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+Verificar se o mongodb está conectado: npx prisma db pull --schema=src/prisma/schema.prisma
+Verificar se o prisma está conectado: node C:\Users\marco\Desktop\ecommerce\src\prisma\testPrisma.js
+
+
+Rodar prisma npx prisma db push --schema=src/prisma/schema.prisma
+Diretorio  C:\Users\marco\Desktop\ecommerce\src\controllers
+Diretório prisma : C:\Users\marco\Desktop\ecommerce\src\prisma
+Executar studio prisma -- npx prisma studio --schema=src/prisma/schema.prisma
+Diretório mongo C:\Users\marco\AppData\Local\Programs\mongosh\
+Criar/ incializar prisma do 0 npx prisma init
