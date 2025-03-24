@@ -83,3 +83,51 @@ export const removeCartItem = async (req, res) => {
     res.status(500).json({ error: 'Erro ao remover item do carrinho', details: error.message });
   }
 };
+
+/*// Processar Venda
+export const processSale = async (req, res) => {
+  try {
+    const { usuarioId, produtoId, quantidadeVendida } = req.body;
+
+    // Verificar se o produto existe
+    const produto = await prisma.product.findUnique({ where: { id: produtoId } });
+
+    if (!produto) {
+      return res.status(404).json({ error: "Produto não encontrado" });
+    }
+
+    // Verificar se há estoque suficiente
+    if (produto.estoque < quantidadeVendida) {
+      return res.status(400).json({ error: "Estoque insuficiente" });
+    }
+
+    // Atualizar o estoque
+    const novoEstoque = produto.estoque - quantidadeVendida;
+    const produtoAtualizado = await prisma.product.update({
+      where: { id: produtoId },
+      data: { estoque: novoEstoque },
+    });
+
+    // Registrar a venda no banco de dados
+    await prisma.venda.create({
+      data: {
+        usuarioId,
+        produtoId,
+        quantidade: quantidadeVendida,
+      },
+    });
+
+    // Verificar se o estoque está baixo (ajuste conforme necessidade)
+    if (novoEstoque <= 3) {
+      console.log(`⚠️ Estoque baixo do produto "${produto.nome}" (${novoEstoque} unidades restantes).`);
+    }
+
+    res.status(200).json({ message: "Venda realizada com sucesso!", produtoAtualizado });
+  } catch (error) {
+    console.error("Erro ao processar venda:", error);
+    res.status(500).json({ error: "Erro ao processar venda", details: error.message });
+  }
+};
+
+
+*/
