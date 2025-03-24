@@ -7,7 +7,9 @@ export const criarVenda = async (req, res) => {
     const { usuarioId, produtoId, quantidadeVendida } = req.body;
 
     // Verificar se o produto existe
-    const produto = await prisma.product.findUnique({ where: { id: produtoId } });
+    const produto = await prisma.Product.findUnique({ 
+      where: { id: produtoId } 
+    });
 
     if (!produto) {
       return res.status(404).json({ error: 'Produto não encontrado' });
@@ -19,7 +21,7 @@ export const criarVenda = async (req, res) => {
     }
 
     // Criar a venda
-    const venda = await prisma.venda.create({
+    const venda = await prisma.Venda.create({
       data: {
         usuarioId,
         produtoId,
@@ -28,7 +30,7 @@ export const criarVenda = async (req, res) => {
     });
 
     // Atualizar o estoque do produto
-    await prisma.product.update({
+    await prisma.Product.update({
       where: { id: produtoId },
       data: { estoque: produto.estoque - quantidadeVendida },
     });
