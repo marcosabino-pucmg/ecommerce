@@ -30,12 +30,24 @@ export const criarVenda = async (req, res) => {
     });
 
     // Atualizar o estoque do produto
+    const novoEstoque = produto.estoque - quantidadeVendida;
     await prisma.Product.update({
       where: { id: produtoId },
-      data: { estoque: produto.estoque - quantidadeVendida },
+      data: { estoque: novoEstoque },
     });
 
-    res.status(201).json(venda);
+    // Verificar se o estoque está baixo (3 unidades ou menos)
+    let mensagemEstoqueBaixo = null;
+    if (novoEstoque <= 3) {
+      mensagemEstoqueBaixo = `⚠️ Atenção: O produto ${produto.nome} está com estoque baixo (${novoEstoque} unidades restantes).`;
+      console.warn(mensagemEstoqueBaixo); // Exibir no terminal do servidor
+    }
+
+    res.status(201).json({
+      venda,
+      aviso: mensagemEstoqueBaixo, // Enviar aviso na resposta (se aplicável)
+    });
+
   } catch (error) {
     console.error('Erro ao registrar venda:', error);
     res.status(500).json({ error: 'Erro ao registrar venda', details: error.message });
